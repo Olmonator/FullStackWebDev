@@ -1,0 +1,7 @@
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: HTML status code: 201 created
+
+note over browser:
+browser sends new note to server adds it to list itself
+server acknowlegdes
+end note
