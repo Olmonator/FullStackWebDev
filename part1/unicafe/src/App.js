@@ -33,6 +33,7 @@ const App = () => {
   const handleGood = () => setGood(good + 1)
   const handleNeutral = () => setNeutral(neutral + 1)
   const handleBad = () => setBad(bad + 1)
+
   return (
     <div>
       <Header name={"give review"}/>
@@ -43,6 +44,9 @@ const App = () => {
       <Stat name={"Good"} counter={good}/>
       <Stat name={"Neutral"} counter={neutral}/>
       <Stat name={"Bad"} counter={bad}/>
+      <Stat name={"All"} counter={bad + good + neutral}/>
+      <Stat name={"Average"} counter={(good - bad) / (bad + good + neutral)}/>
+      <Stat name={"Positive"} counter={good / (good + bad + neutral) + " %"}/>
     </div>
   )
 }
