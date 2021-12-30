@@ -1,5 +1,28 @@
 import React, { useState } from 'react'
 
+function findMax(array) {
+  var maxIndex = 0
+  var max = 0
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] > max) {
+        maxIndex = i
+        max = array[i]
+    }
+  }
+  return maxIndex
+}
+
+const High = (props) => {
+  const index = findMax(props.points)
+  return (
+    <div>
+      <h1>Most popular anecdote!</h1>
+      {props.anecdotes[index]}
+      has {props.points[index]} votes
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -26,6 +49,7 @@ const App = () => {
 
   return (
     <div>
+      <h1>anecdote of the day</h1>
       <p>
        {anecdotes[selected]}
       </p>
@@ -35,6 +59,7 @@ const App = () => {
       <button onClick={handleNext}>next anecdote</button>
       <button onClick={handleVote}>vote</button>
       {console.log(points)}
+      <High anecdotes={anecdotes} points={points}/>
     </div>
   )
 }
