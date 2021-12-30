@@ -19,14 +19,11 @@ const Part = (props) => {
   )
 }
 
-const Content = (props) => {
-  console.log(props)
+const Content = ( {parts} ) => {
+ 
   return (
     <div>
-    <Part part={props.parts[0]} />
-    <Part part={props.parts[1]} />
-    <Part part={props.parts[2]} />
-    <Part part={props.parts[3]} />
+      {parts.map(parts => <Part part={parts}/>)}
     </div>
   )
 }
@@ -53,7 +50,8 @@ const Course = ( {course} ) => {
 }
 
 const App = () => {
-  const course = {
+  const courses = [
+    {
     id: 1,
     name: 'Half Stack application development',
     parts: [
@@ -78,9 +76,31 @@ const App = () => {
         id: 4
       }
     ]
+  },
+  {
+    name: 'Node.js',
+    id: 2,
+    parts: [
+      {
+        name: 'Routing',
+        exercises: 3,
+        id: 1
+      },
+      {
+        name: 'Middlewares',
+        exercises: 7,
+        id: 2
+      }
+    ]
   }
+]
 
-  return <Course course={course} />
+  return (
+    <>
+      <Course course={courses[0]} />
+      <Course course={courses[1]} />
+    </>
+  )
 } 
 
 export default App   
