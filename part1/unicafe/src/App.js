@@ -10,11 +10,12 @@ const Header = (props) => {
 
 const Stat = (props) => {
   return (
-    <div>
-      <p>
-        {props.name}: {props.counter}
-      </p>
-    </div>
+    <tbody>
+      <tr>
+        <th>{props.name}</th>
+        <th>{props.counter}</th>
+      </tr>
+    </tbody>
   )
 }
 
@@ -32,12 +33,14 @@ const Statistics = (props) => {
   }  
   return (
     <div>
-      <Stat name="Good" counter={good}/>
-      <Stat name="Neutral" counter={neutral}/>
-      <Stat name="Bad" counter={bad}/>
-      <Stat name="All" counter={all}/>
-      <Stat name="Average" counter={(good - bad) / all}/>
-      <Stat name="Positive" counter={good / all + " %"}/>
+      <table>
+        <Stat name="Good" counter={good}/>
+        <Stat name="Neutral" counter={neutral}/>
+        <Stat name="Bad" counter={bad}/>
+        <Stat name="All" counter={all}/>
+        <Stat name="Average" counter={(good - bad) / all}/>
+        <Stat name="Positive" counter={good / all + " %"}/>
+      </table>
     </div>
   )
 } 
