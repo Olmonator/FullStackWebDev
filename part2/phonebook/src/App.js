@@ -3,6 +3,8 @@ import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import Form from './components/Form'
+import personService from './services/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,20 +12,16 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
-  }
-  
-  useEffect(hook, [])
+     }, [])
 
   const addPerson = (event) => {
-    console.log(event.target)
+    console.log('adding new person:', event.target)
     event.preventDefault()
     
     const nameObject = {
@@ -34,12 +32,15 @@ const App = () => {
     if (persons.map(person => person.name).includes(newName)) {
       window.alert(`${newName} is already added to phonebook`)
     } else {
-      console.log('add new person:', nameObject.name, nameObject.number)
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(nameObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-  }
+   }
 
   const filteredPersons = 
     (filter === '') ?
