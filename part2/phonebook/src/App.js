@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import Person from './components/Person'
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      id: 1,
-      number: '000 111'
-    }
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [Filter, setFilter] = useState('')
 
   const addPerson = (event) => {
     console.log(event.target)
@@ -29,6 +30,11 @@ const App = () => {
     }
   }
 
+  const filteredPersons = 
+    (Filter === '') ?
+    persons :
+    persons.filter(person => person.name.toLowerCase().includes(Filter) === true) 
+
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -39,9 +45,19 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleFilterChange = (event) => {
+    console.log(event.target.value)
+    setFilter(event.target.value)
+  }
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      filter with: <input
+        value={Filter}
+        onChange={handleFilterChange}
+      />
+      <h3>Add to Phonebook</h3>
       <form onSubmit={addPerson}>
         <div>
           name: <input 
@@ -59,9 +75,9 @@ const App = () => {
           <button type="submit">add</button>
         </div>
       </form>
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <ul>
-        {persons.map(person =>
+        {filteredPersons.map(person =>
           <li key={person.id}> {person.name}: {person.number}</li>
         )}
 
