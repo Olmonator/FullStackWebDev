@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import Form from './components/Form'
@@ -62,6 +61,11 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const deletePerson = (id) => {
+    personService.deletePerson(id)
+    setPersons(persons.filter(person => person.id !== id))
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -83,6 +87,7 @@ const App = () => {
       <Persons 
         persons={persons} 
         filterFunction={filteredPersons}
+        deletePerson={deletePerson}
        />
     </div>
     
