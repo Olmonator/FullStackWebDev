@@ -1,7 +1,8 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
-app.use(express.json())
+app.use(express.json(), morgan('tiny'))
 
 let persons = [
     { 
@@ -26,12 +27,68 @@ let persons = [
       }
 ]
 
-app.get('/', (request, response) => {
-    response.send('<h1>PhoneBook</h1>')
+app.get('/', (req, res) => {
+    res.send('<h1>PhoneBook</h1>')
+})
+
+app.get('/api/info', (req, res) => {
+    res.send(`Phonebook has info for ${persons.length} people <br/><br/>  ${Date()}`)
 })
   
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/persons', (req, res) => {
+    res.json(persons)
+})
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(person => person.id === id)
+  
+    if (person) {
+      res.json(person)
+    } else {
+      res.status(404).end()
+    }
+  })
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    persons = persons.filter(person => person.id !== id)
+  
+    res.status(204).end()
+})
+
+const generateId = () => {
+    return Math.floor(Math.random()*100000)
+}
+  
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    console.log(body.name)
+    if (!body) {
+        return res.status(400).json({ 
+          error: 'content missing' 
+        })
+      }
+    if (persons.map(person => person.name).includes(body.name)) {
+       
+        return res.status(400).json({
+            error: 'person already in phonebook'
+        })
+    }
+    if (!body.name || !body.number) {
+        return res.status(400).json({
+            error: 'number or name missing'
+        })
+    }
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    }
+
+    persons = persons.concat(person)
+
+    res.json(person)
 })
   
 const PORT = 3001
