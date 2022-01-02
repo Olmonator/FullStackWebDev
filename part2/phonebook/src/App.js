@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import Form from './components/Form'
+import Notification from './components/Notification'
 import personService from './services/persons'
+import './App.css'
 
 
 const App = () => {
@@ -10,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [alertMessage, setAlertMessage] = useState(null)
+  const [type, setType] = useState(true) // true = alert flase = error
 
   useEffect(() => {
     personService
@@ -38,6 +42,23 @@ const App = () => {
           setPersons(persons.filter(person => person.id !== temp_id).concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setAlertMessage(          
+            `Person ${nameObject.name} was updated`        
+          )        
+          setTimeout(() => {          
+            setAlertMessage(null)        
+          }, 5000)
+        })
+        .catch(error => {
+          console.log('fail')
+          setType(false)
+          setAlertMessage(          
+            `Person ${nameObject.name} doesn't exist anymore`        
+          )        
+          setTimeout(() => {          
+            setAlertMessage(null)        
+          }, 5000)
+          setPersons(persons.filter(person => person.id !== temp_id))
         })
     } else {
       console.log('adding new person:', event.target)
@@ -47,6 +68,13 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setType(true)
+          setAlertMessage(          
+            `Person ${nameObject.name} was added`        
+          )        
+          setTimeout(() => {          
+            setAlertMessage(null)        
+          }, 5000)
         })
     }
    }
@@ -85,6 +113,7 @@ const App = () => {
       />
 
       <h3>Add to Phonebook</h3>
+      <Notification message={alertMessage} type={type} />
       <Form 
         onSubmit={addPerson} 
         nameValue={newName} 
