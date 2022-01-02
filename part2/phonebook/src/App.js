@@ -20,7 +20,6 @@ const App = () => {
      }, [])
 
   const addPerson = (event) => {
-    console.log('adding new person:', event.target)
     event.preventDefault()
     
     const nameObject = {
@@ -29,8 +28,19 @@ const App = () => {
       id: persons.length +1
     }
     if (persons.map(person => person.name).includes(newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+      const temp_id = persons.find(person => person.name === newName).id
+      console.log('ID:', temp_id)
+      console.log('updating person', event.target)
+      nameObject.id = temp_id
+      personService
+        .update(temp_id, nameObject)
+        .then(returnedPerson => {
+          setPersons(persons.filter(person => person.id !== temp_id).concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     } else {
+      console.log('adding new person:', event.target)
       personService
         .create(nameObject)
         .then(returnedPerson => {
