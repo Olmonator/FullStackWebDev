@@ -28,7 +28,7 @@ beforeEach(async () => {
     await blogObject.save()  
     blogObject = new Blog(initialBlogs[1])  
     await blogObject.save()
-})
+}, 100000)
  
 test('blogs are returned as json (blog api)', async () => {
     await api
@@ -46,6 +46,12 @@ test('get first blog entry (blog api)', async () => {
     const response = await api.get('/api/blogs')
     console.log("TEST: blogapi", response.body)
     expect(response.body[0]).toEqual(initialBlogs[0])
+}, 100000)
+
+test('check that unique identifier is called id', async () => {
+    const response = await api.get('/api/blogs')
+    console.log(response.body.map(blog => blog.id))
+    expect(response.body.map(blog => blog.id)).toBeDefined()
 }, 100000)
 
 afterAll(() => {
