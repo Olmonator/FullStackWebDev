@@ -21,7 +21,7 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
-     }, [])
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -50,15 +50,22 @@ const App = () => {
           }, 5000)
         })
         .catch(error => {
-          console.log('fail')
+          console.log('fail:', error.response.data)
           setType(false)
-          setAlertMessage(          
-            `Person ${nameObject.name} doesn't exist anymore`        
-          )        
-          setTimeout(() => {          
-            setAlertMessage(null)        
-          }, 5000)
-          setPersons(persons.filter(person => person.id !== temp_id))
+          if (error.response.data.name === 'ValidationError') {
+            setAlertMessage(error.response.data.message)
+            setTimeout(() => {          
+              setAlertMessage(null)        
+            }, 5000)
+          } else {
+            setAlertMessage(          
+              `Person ${nameObject.name} doesn't exist anymore`        
+            )
+            setTimeout(() => {          
+              setAlertMessage(null)        
+            }, 5000)
+            setPersons(persons.filter(person => person.id !== temp_id))
+          }
         })
     } else {
       console.log('adding new person:', event.target)
@@ -72,6 +79,14 @@ const App = () => {
           setAlertMessage(          
             `Person ${nameObject.name} was added`        
           )        
+          setTimeout(() => {          
+            setAlertMessage(null)        
+          }, 5000)
+        })
+        .catch(error => {
+          setType(false)
+          console.log(error.response.data)
+          setAlertMessage(error.response.data.message)        
           setTimeout(() => {          
             setAlertMessage(null)        
           }, 5000)

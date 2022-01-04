@@ -1,10 +1,11 @@
-
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 const Person = require('./models/person')
+const opts = { runValidators: true }
+ 
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
@@ -28,15 +29,14 @@ app.use(
 )
 
 app.get('/', (req, res) => {
-    res.send('<h1>PhoneBook</h1>')
+  res.send('<h1>PhoneBook</h1>')
 })
 
 
 app.get('/api/info', (req, res) => {
-    Person.find({}).then(persons => {
-      res.send(`Phonebook has info for ${persons.length} people <br/><br/>  ${Date()}`)
-    })
-    
+  Person.find({}).then(persons => {
+    res.send(`Phonebook has info for ${persons.length} people <br/><br/>  ${Date()}`)
+  })  
 })
 
 // Database fetching
@@ -48,56 +48,55 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id).then(person => {
-     if (person) {
-       res.json(person)
-     } else {
-       res.status(404).end()
-     }
-   })
-   .catch(error => next(error))
+    if (person) {
+      res.json(person)
+    } else {
+      res.status(404).end()
+    }
+  })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    Person.findByIdAndRemove(req.params.id)
-      .then(result => {
-        res.status(204).end()
-      })
-      .catch(error => next(error))
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const generateId = () => {
-    return Math.floor(Math.random()*100000)
+  return Math.floor(Math.random()*100000)
 }
   
-app.post('/api/persons', (req, res, next) => {
-    const body = req.body
-    console.log(body)
-    
-    if (!body) {
-        return res.status(400).json({ 
-          error: 'content missing' 
-        })
-    }  
-    const person = new Person ({
-      id: generateId(),   
-      name: body.name,
-      number: body.number,   
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+  console.log(body)
+  if (!body) {
+    return res.status(400).json({ 
+      error: 'content missi ng' 
     })
-    person.save().then(savedPerson => {
-      res.json(savedPerson)
-    })
+  }  
+  const person = new Person ({
+    id: generateId(),   
+    name: body.name,
+    number: body.number,   
+  })
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
     .catch(function(err) {
       if (err.name == 'ValidationError') {
-          console.error('Error Validating!', err);
-          res.status(422).json(err);
+        console.error('Error Validating!', err)
+        res.status(422).json(err)
       } else {
-          console.error(err);
-          res.status(500).json(err);
+        console.error(err)
+        res.status(500).json(err)
       }
-  })
+    })
 })
 
-app.put('/api/persons/:id', (request, response, next) => {
+app.put('/api/persons/:id', (request, response, next, opts) => {
   const body = request.body
 
   const person = {
@@ -106,7 +105,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
   console.log(person)
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true }, opts)
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -115,5 +114,5 @@ app.put('/api/persons/:id', (request, response, next) => {
   
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
