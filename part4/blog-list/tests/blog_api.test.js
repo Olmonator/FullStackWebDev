@@ -85,6 +85,22 @@ test ('likes to zero', async () => {
     console.log("TEST: blogapi", response.body)
     expect(response.body[0].likes).toBe(0)
 }, 100000)
+
+test ('url and title missing from new blog', async () => {
+    const newBlog ={
+        _id: "123456789",
+        author: "testAuthor",
+        url: "testURL",
+        likes: 12,
+        __v: 0
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
