@@ -10,7 +10,7 @@ const initialBlogs = [
         title: "React patterns",
         author: "Michael Chan",
         url: "https://reactpatterns.com/",
-        likes: 7,
+        
         __v: 0
     },
     {
@@ -78,8 +78,13 @@ test('check POST valid', async () => {
     expect(contents).toContain(
       'Canonical string reduction'
     )
-  })
+})
 
+test ('likes to zero', async () => {
+    const response = await api.get('/api/blogs')
+    console.log("TEST: blogapi", response.body)
+    expect(response.body[0].likes).toBe(0)
+}, 100000)
 afterAll(() => {
   mongoose.connection.close()
 })
