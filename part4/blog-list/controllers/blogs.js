@@ -12,7 +12,7 @@ blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body)
 
   const savedBlog = await blog.save()
-  response.json(result)
+  response.json(savedBlog)
   logger.info("POST request successful")
 })
 
