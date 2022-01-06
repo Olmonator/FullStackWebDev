@@ -19,9 +19,9 @@ const App = () => {
   }
   
   useEffect(hook, [])
-  console.log(countries)
+  
   const handleFilterChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setFilter(event.target.value)
   }
 
@@ -29,7 +29,7 @@ const App = () => {
     countries :
     countries.filter(country => country.name.common.toLowerCase().includes(filter))
   
-  console.log('selected', selectedCountries)
+  //console.log('selected', selectedCountries)
   return (
     <div>
       <h1>Country Data</h1>
