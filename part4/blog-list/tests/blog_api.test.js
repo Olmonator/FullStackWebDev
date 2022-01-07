@@ -16,12 +16,12 @@ const initialBlogs = [
         __v: 0
     },
     {
-        _id: "5a422aa71b54a676234d17f8",
         title: "Go To Statement Considered Harmful",
         author: "Edsger W. Dijkstra",
         url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
         likes: 5,
-        __v: 0
+        __v: 0,
+        _id: "5a422aa71b54a676234d17f8"
     }
 ]
 beforeEach(async () => {  
@@ -44,11 +44,21 @@ test('all blogs are returned (blog api)', async () => {
   
     expect(response.body).toHaveLength(initialBlogs.length)
 }, 100000)
-test('get first blog entry (blog api)', async () => {
-    const response = await api.get('/api/blogs')
-    console.log("TEST: blogapi", response.body)
-    expect(response.body[0]).toEqual(initialBlogs[0])
-}, 100000)
+
+test('succeeds with a valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const blogToView = blogsAtStart[1]
+    console.log(blogToView)
+    const resultBlog = await api
+      .get(`/api/blogs/`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const processedNoteToView = JSON.parse(JSON.stringify(blogToView))
+
+    expect(resultBlog.body[1]).toEqual(processedNoteToView)
+  })
 
 test('check that unique identifier is called id', async () => {
     const response = await api.get('/api/blogs')
