@@ -1,16 +1,18 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-
+const bcrypt = require('bcrypt')
+const helper = require('./test_helper')
 const api = supertest(app)
-const Blog = require('../model/blog')
+const Blog = require('../models/blog')
+const User = require('../models/user')
 const initialBlogs = [
     {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
         author: "Michael Chan",
         url: "https://reactpatterns.com/",
-        
+        //likes: 7
         __v: 0
     },
     {
@@ -26,7 +28,7 @@ beforeEach(async () => {
     await Blog.deleteMany({})  
     let blogObject = new Blog(initialBlogs[0])
     await blogObject.save()  
-    blogObject = new Blog(initialBlogs[1])  
+    blogObject = new Blog(initialBlogs[1])
     await blogObject.save()
 }, 100000)
  
@@ -99,6 +101,116 @@ test ('url and title missing from new blog', async () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+   
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ name: 'foo', username: 'root', passwordHash })
+    //console.log("USER_TEST:", user)
+    await user.save()
+    }, 100000)
+    test('New users are returned', async () => {
+        await api
+          .get('/api/users')
+          .expect(200)
+          //.expect('Content-Type', /application\/json/)
+    })
+    test('creation succeeds with a fresh username', async () => {
+      const usersAtStart = await helper.usersInDb()
+  
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+  
+      const usernames = usersAtEnd.map(u => u.username)
+      expect(usernames).toContain(newUser.username)
+    }, 100000)
+  
+    test('creation fails; username too short', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'ml',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+    }, 10000),
+    test('creation fails; username missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+  
+        const newUser = {
+          name: 'Matti Luukkainen',
+          password: 'salainen',
+        }
+  
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+      }, 10000),
+      test('creation fails; password too short', async () => {
+        const usersAtStart = await helper.usersInDb()
+  
+        const newUser = {
+          username: 'mlukk',
+          name: 'Matti Luukkainen',
+          password: 'sa',
+        }
+  
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+      }, 10000),
+      test('creation fails; password missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+  
+        const newUser = {
+          username: 'mluuk',
+          name: 'Matti Luukkainen',
+        }
+  
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+      }, 10000),
+      test('creation fails; username not unique', async () => {
+        const usersAtStart = await helper.usersInDb()
+  
+        const newUser = {
+          username: 'root',
+          name: 'Matti Luukkainen',
+          password: 'salainen',
+        }
+  
+        await api
+          .post('/api/users')
+          .send(newUser)
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+      }, 10000)
 })
 
 afterAll(() => {
