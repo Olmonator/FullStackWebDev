@@ -45,7 +45,7 @@ test('all blogs are returned (blog api)', async () => {
     expect(response.body).toHaveLength(initialBlogs.length)
 }, 100000)
 
-test('succeeds with a valid id', async () => {
+test('GET/:id succeeds with a valid id', async () => {
     const blogsAtStart = await helper.blogsInDb()
 
     const blogToView = blogsAtStart[1]
@@ -78,6 +78,7 @@ test('check POST valid', async () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcnNvbiIsImlkIjoiNjFkODljNGE2MGZjOTE4YjQxYmY1NTIzIiwiaWF0IjoxNjQxNTg1NzUzfQ.mCkla2K0gtrCW8rEpaCadwvXTteHVSqVqONpEJJEbVs')
       .send(newBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -109,6 +110,7 @@ test ('url and title missing from new blog', async () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcnNvbiIsImlkIjoiNjFkODljNGE2MGZjOTE4YjQxYmY1NTIzIiwiaWF0IjoxNjQxNTg1NzUzfQ.mCkla2K0gtrCW8rEpaCadwvXTteHVSqVqONpEJJEbVs')
       .send(newBlog)
       .expect(400)
 })
