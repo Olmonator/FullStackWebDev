@@ -1,8 +1,21 @@
 import React from 'react'
-const Blog = ({blog}) => (
-  <div>
-    {blog.title} by {blog.author}
-  </div>  
-)
+import './../App.css'
+
+const Blog = ({blog}) => {
+
+
+  return (
+    <div className='blog'>
+      {blog.title}
+      <br></br>
+      avaiable at {blog.url}
+      <br></br>
+      likes {blog.likes}
+      <button>like</button>
+      <br></br>
+      by {blog.author}
+    </div> 
+  ) 
+}
 
 export default Blog
