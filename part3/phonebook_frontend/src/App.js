@@ -12,8 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [alertMessage, setAlertMessage] = useState(null)
-  const [type, setType] = useState(true) // true = alert flase = error
+    const [type, setType] = useState(true) // true = alert flase = error
 
   useEffect(() => {
     personService
