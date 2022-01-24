@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogCreationForm from './components/BlogCreationForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
 
@@ -10,9 +13,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
+
   const [alertMessage, setAlertMessage] = useState(null)
 
  
@@ -92,18 +93,18 @@ const App = () => {
 
     console.log('creating new blogpost ...', event.target)
     const newBlogObject = {
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl,
+      title: BlogCreationForm.blogTitle,
+      author: BlogCreationForm.blogAuthor,
+      url: BlogCreationForm.blogUrl,
       likes: 0
     }
     
     try {
       const savedBlog = await blogService.create(newBlogObject)
 
-      setBlogAuthor('')
-      setBlogTitle('')
-      setBlogUrl('')
+      BlogCreationForm.setBlogAuthor('')
+      BlogCreationForm.setBlogTitle('')
+      BlogCreationForm.setBlogUrl('')
       
       setBlogs(blogs.concat(savedBlog))
       console.log('blog created', savedBlog)
@@ -124,71 +125,19 @@ const App = () => {
     }
     
   }
-
-  // loginForm
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-      </div>
-      <div>
-        password
-          <input
-            type="text"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
-  // blogsForm
-  const blogForm = () => (
-    <form onSubmit={handleCreate}>
-      <div> 
-        title:
-          <input 
-            type="text"
-            value={blogTitle}
-            name="Blogtitle"
-            onChange={({ target }) => setBlogTitle(target.value)}
-          />
-      </div>
-      <div>
-        author:
-          <input 
-            type="text"
-            value={blogAuthor}
-            name="Blogauthor"
-            onChange={({ target }) => setBlogAuthor(target.value)}
-          />
-      </div>
-      <div>
-        url:
-          <input 
-            type="text"
-            value={blogUrl}
-            name="BlogURL"
-            onChange={({ target }) => setBlogUrl(target.value)}
-          />
-      </div>
-      <button type="submit"> create </button>
-    </form>
-  )
+  
   if ( user === null) {
     return (
       <div>
         <Notification message={alertMessage} />
-        <h2>Log in to bloglists</h2>
-        {loginForm()}
+
+        <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
       </div>
     )
   } else {
@@ -200,7 +149,13 @@ const App = () => {
           {user.name} logged in 
           <button onClick={handleLogout}> logout </button>
         </p>
-        {blogForm()}
+        
+        <Togglable buttonLabel='Create New Blog'>
+          <BlogCreationForm
+            handleCreate={handleCreate}
+          />
+        </Togglable>
+        
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
