@@ -1,5 +1,6 @@
 import React from 'react'
 import './../App.css'
+import Expandable from './Expandable'
 
 const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   const handleLike = (event) => {
@@ -25,19 +26,15 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   }
 
   return (
-    <div className='blog'>
-      {blog.title}
-      <br></br>
-      avaiable at {blog.url}
-      <br></br>
-      likes {blog.likes}
-      <button onClick={handleLike}>like</button>
-      <br></br>
-      by {blog.author}
-      <br></br>
-
-      {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
-    </div>
+    <Expandable title={blog.title} author={blog.author} buttonLabel='view'>
+      <div className='blog'>
+        <p> {blog.title} by {blog.author} </p>
+        <p> avaiable at {blog.url} </p>
+        <p> likes {blog.likes} <button onClick={handleLike}>like</button> </p>
+        <p> posted by {blog.user.name} </p>
+        {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
+      </div>
+    </Expandable>
   )
 }
 

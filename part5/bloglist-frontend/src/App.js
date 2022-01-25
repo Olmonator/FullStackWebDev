@@ -7,7 +7,6 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogCreationForm from './components/BlogCreationForm'
 import Togglable from './components/Togglable'
-import Expandable from './components/Expandable'
 
 const App = () => {
 
@@ -92,7 +91,6 @@ const App = () => {
   }
 
   const createBlog = async (blog) => {
-
     try {
       const savedBlog = await blogService.create(blog)
 
@@ -200,17 +198,13 @@ const App = () => {
         </Togglable>
 
         {blogs.sort((blog1, blog2) => blog2.likes - blog1.likes).map(blog =>
-          <Expandable
+          <Blog
             key={blog.id}
-            buttonLabel='view'
-            title={blog.title}>
-            <Blog
-              blog={blog}
-              likeBlog={likeBlog}
-              deleteBlog={deleteBlog}
-              user={user}
-            />
-          </Expandable>
+            blog={blog}
+            likeBlog={likeBlog}
+            deleteBlog={deleteBlog}
+            user={user}
+          />
         )}
       </div>
     )

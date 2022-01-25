@@ -33,36 +33,42 @@ const BlogCreationForm =  React.forwardRef(({ createBlog }, ref) => {
   })
 
   return (
-    <form onSubmit={handleCreate}>
-      <div>
-        title:
-        <input
-          type="text"
-          value={blogTitle}
-          name="Blogtitle"
-          onChange={({ target }) => setBlogTitle(target.value)}
-        />
-      </div>
-      <div>
-        author:
-        <input
-          type="text"
-          value={blogAuthor}
-          name="Blogauthor"
-          onChange={({ target }) => setBlogAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url:
-        <input
-          type="text"
-          value={blogUrl}
-          name="BlogURL"
-          onChange={({ target }) => setBlogUrl(target.value)}
-        />
-      </div>
-      <button type="submit"> create </button>
-    </form>
+    <div className='blogCreationDiv'>
+      <h2>Create a new Blog</h2>
+      <form onSubmit={handleCreate}>
+        <div>
+          title:
+          <input
+            id='blogTitle'
+            type="text"
+            value={blogTitle}
+            name="Blogtitle"
+            onChange={({ target }) => setBlogTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:
+          <input
+            id='blogAuthor'
+            type="text"
+            value={blogAuthor}
+            name="Blogauthor"
+            onChange={({ target }) => setBlogAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url:
+          <input
+            id='blogUrl'
+            type="text"
+            value={blogUrl}
+            name="BlogURL"
+            onChange={({ target }) => setBlogUrl(target.value)}
+          />
+        </div>
+        <button type="submit"> create </button>
+      </form>
+    </div>
   )
 })
 

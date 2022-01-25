@@ -20,6 +20,11 @@ body {
   background-color: #8fc2c2;
 }
 
+p {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
 .blog  {
   background-color: white;
   border-radius: 5px;
