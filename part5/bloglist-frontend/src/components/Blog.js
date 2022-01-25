@@ -6,7 +6,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
     event.preventDefault()
 
     console.log('adding Like to blogpost ...')
-    
+
     const updatedBlogObject = {
       title: blog.title,
       author: blog.author,
@@ -19,9 +19,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   const handleDelete = (event) => {
     event.preventDefault()
     console.log('deleteding post ...')
-    if (window.confirm("Do you really want to delete this Blog?")) {
+    if (window.confirm('Do you really want to delete this Blog?')) {
       deleteBlog(blog.id, blog.user)
-    }    
+    }
   }
 
   return (
@@ -35,10 +35,10 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
       <br></br>
       by {blog.author}
       <br></br>
-      
+
       {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
-    </div> 
-  ) 
+    </div>
+  )
 }
 
 export default Blog

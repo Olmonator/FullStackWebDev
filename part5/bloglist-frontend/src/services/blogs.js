@@ -21,7 +21,7 @@ const create = async newBlog => {
 }
 
 const like = async blog => {
-  
+
   const config = {
     headers: { Authorization: token }
   }
@@ -35,7 +35,7 @@ const deleteBlog = async id => {
     headers: { Authorization: token }
   }
   const url = baseUrl.concat('/', id)
- 
+
   const response = await axios.delete(url, config)
   return response.data
 }

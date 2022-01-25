@@ -1,10 +1,12 @@
-import React, {useState, useImperativeHandle} from 'react'
+import React, { useState, useImperativeHandle } from 'react'
 
-const BlogCreationForm =  React.forwardRef(({createBlog}, ref) => {
-  
+const BlogCreationForm =  React.forwardRef(({ createBlog }, ref) => {
+
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
+  BlogCreationForm.displayName = 'BlogCreationForm'
+
   const handleCreate = (event) => {
     event.preventDefault()
 
@@ -13,7 +15,7 @@ const BlogCreationForm =  React.forwardRef(({createBlog}, ref) => {
       title: blogTitle,
       author: blogAuthor,
       url: blogUrl,
-      likes: 0 
+      likes: 0
     }
     createBlog(newBlogObject)
   }
@@ -25,41 +27,41 @@ const BlogCreationForm =  React.forwardRef(({createBlog}, ref) => {
   }
 
   useImperativeHandle(ref, () => {
-    return {      
-      resetInputs    
-    }  
+    return {
+      resetInputs
+    }
   })
 
   return (
     <form onSubmit={handleCreate}>
-        <div> 
+      <div>
         title:
-            <input 
-            type="text"
-            value={blogTitle}
-            name="Blogtitle"
-            onChange={({ target }) => setBlogTitle(target.value)}
-            />
-        </div>
-        <div>
+        <input
+          type="text"
+          value={blogTitle}
+          name="Blogtitle"
+          onChange={({ target }) => setBlogTitle(target.value)}
+        />
+      </div>
+      <div>
         author:
-            <input 
-            type="text"
-            value={blogAuthor}
-            name="Blogauthor"
-            onChange={({ target }) => setBlogAuthor(target.value)}
-            />
-        </div>
-        <div>
+        <input
+          type="text"
+          value={blogAuthor}
+          name="Blogauthor"
+          onChange={({ target }) => setBlogAuthor(target.value)}
+        />
+      </div>
+      <div>
         url:
-            <input 
-            type="text"
-            value={blogUrl}
-            name="BlogURL"
-            onChange={({ target }) => setBlogUrl(target.value)}
-            />
-        </div>
-        <button type="submit"> create </button>
+        <input
+          type="text"
+          value={blogUrl}
+          name="BlogURL"
+          onChange={({ target }) => setBlogUrl(target.value)}
+        />
+      </div>
+      <button type="submit"> create </button>
     </form>
   )
 })
