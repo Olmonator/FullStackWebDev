@@ -1,9 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState, useImperativeHandle} from 'react'
 
-const BlogCreationForm = ({ handleCreate }) => {
+const BlogCreationForm =  React.forwardRef(({createBlog}, ref) => {
+  
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
+  const handleCreate = (event) => {
+    event.preventDefault()
+
+    console.log('creating new blogpost ...', event.target)
+    const newBlogObject = {
+      title: blogTitle,
+      author: blogAuthor,
+      url: blogUrl,
+      likes: 0 
+    }
+    createBlog(newBlogObject)
+  }
+
+  const resetInputs = () => {
+    setBlogAuthor('')
+    setBlogTitle('')
+    setBlogUrl('')
+  }
+
+  useImperativeHandle(ref, () => {
+    return {      
+      resetInputs    
+    }  
+  })
 
   return (
     <form onSubmit={handleCreate}>
@@ -37,6 +62,6 @@ const BlogCreationForm = ({ handleCreate }) => {
         <button type="submit"> create </button>
     </form>
   )
-}
+})
 
 export default BlogCreationForm

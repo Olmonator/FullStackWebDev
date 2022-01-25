@@ -19,5 +19,25 @@ const create = async newBlog => {
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
+
+const like = async blog => {
   
-export default { getAll, create, setToken }
+  const config = {
+    headers: { Authorization: token }
+  }
+  const url = baseUrl.concat('/', blog.id)
+  const response = await axios.put(url, blog, config)
+  return response.data
+}
+
+const deleteBlog = async id => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const url = baseUrl.concat('/', id)
+ 
+  const response = await axios.delete(url, config)
+  return response.data
+}
+
+export default { getAll, create, setToken, like, deleteBlog }

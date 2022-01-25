@@ -5,6 +5,14 @@ const logger = require('../utils/logger')
 const User = require('../models/user')
 const middleware = require('../utils/middleware')
 
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')  
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {    
+    return authorization.substring(7)  
+  }  
+  return null
+}
+
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
@@ -17,27 +25,27 @@ blogsRouter.post('/', middleware.tokenExtractor, async (request, response) => {
   const body = request.body
 
   const user = await User.findById(request.token.id)
-  
+  console.log(request.token.id)
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user
+    user: user._id
   })
   const savedBlog = await blog.save()
   response.json(savedBlog)
-
-  user.blogs = user.blogs.concat(savedBlog)
-  await user.save()
-
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save({ validateModifiedOnly: true })
   logger.info("POST request successful")
 })
 
-blogsRouter.delete('/:id', middleware.tokenExtractor, async (request, response, next) => {
-  const token = request.token.id
+blogsRouter.delete('/:id', middleware.tokenExtractor, async (request, response) => {
+  const token = getTokenFrom(request)
+  console.log(token)
   const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
+  console.log(decodedToken)
+  if (!decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
 

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
 import BlogCreationForm from './components/BlogCreationForm'
 import Togglable from './components/Togglable'
 import Expandable from './components/Expandable'
@@ -19,6 +18,9 @@ const App = () => {
 
   const [alertMessage, setAlertMessage] = useState(null)
  
+  const blogFormRef = useRef()
+  const blogFormInputRef = useRef()
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -90,24 +92,13 @@ const App = () => {
     }, 5000)
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-
-    console.log('creating new blogpost ...', event.target)
-    const newBlogObject = {
-      title: BlogCreationForm.blogTitle,
-      author: BlogCreationForm.blogAuthor,
-      url: BlogCreationForm.blogUrl,
-      likes: 0
-    }
-    
+  const createBlog = async (blog) => {
+   
     try {
-      const savedBlog = await blogService.create(newBlogObject)
-
-      BlogCreationForm.setBlogAuthor('')
-      BlogCreationForm.setBlogTitle('')
-      BlogCreationForm.setBlogUrl('')
+      const savedBlog = await blogService.create(blog)
       
+      blogFormInputRef.current.resetInputs()
+      blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(savedBlog))
       console.log('blog created', savedBlog)
       setAlertMessage(          
@@ -128,18 +119,66 @@ const App = () => {
     
   }
   
+  const likeBlog = async (blog) => {
+    try {
+      const savedBlog = await blogService.like(blog)
+      
+      setBlogs(blogs.filter(b => b.name === savedBlog.name))
+      console.log('blog liked', savedBlog)
+    } catch (exception) {
+      console.log('liking blog unsuccessful')
+      setAlertMessage(          
+        `Error: blog could not be liked`        
+      )        
+      setTimeout(() => {          
+        setAlertMessage(null)        
+      }, 5000)
+    }
+  }
+
+  const deleteBlog = async (id, user) => {
+    try {
+     await blogService.deleteBlog(id)
+      
+      setBlogs(blogs.filter(b => b.id !== id))
+      console.log('blog deleted')
+    } catch (exception) {
+      console.log('deleting blog unsuccessful')
+      setAlertMessage(          
+        `Error: blog could not be deleted`        
+      )        
+      setTimeout(() => {          
+        setAlertMessage(null)        
+      }, 5000)
+    }
+  }
   if ( user === null) {
     return (
       <div>
         <Notification message={alertMessage} />
 
-        <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
+        <h2> Login Here </h2>
+          <form onSubmit={handleLogin}>
+          <div>
+              username
+              <input
+                  type="text"
+                  value={username}
+                  name="Username"
+                  onChange={({ target }) => setUsername(target.value)}
+              />
+          </div>
+          <div>
+              password
+              <input
+                  type="text"
+                  value={password}
+                  name="Password"
+                  onChange={({ target }) => setPassword(target.value)}
+              />
+          </div>
+          <button type="submit">login</button>
+          </form>
       </div>
     )
   } else {
@@ -152,17 +191,26 @@ const App = () => {
           <button onClick={handleLogout}> logout </button>
         </p>
         
-        <Togglable buttonLabel='Create New Blog'>
+        <Togglable 
+          buttonLabel='Create New Blog' 
+          ref={blogFormRef}>
           <BlogCreationForm
-            handleCreate={handleCreate}
+            createBlog={createBlog}
+            ref={blogFormInputRef}
           />
         </Togglable>
         
-        {blogs.map(blog =>
+        {blogs.sort((blog1, blog2) => blog2.likes - blog1.likes).map(blog =>
           <Expandable 
+            key={blog.id} 
             buttonLabel='view'
             title={blog.title}>
-            <Blog key={blog.id} blog={blog} />
+            <Blog 
+              blog={blog}
+              likeBlog={likeBlog}
+              deleteBlog={deleteBlog}
+              user={user}
+            />
            </Expandable>
         )}
       </div>
