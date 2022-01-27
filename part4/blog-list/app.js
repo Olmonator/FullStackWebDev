@@ -3,9 +3,11 @@ const express = require('express')
 const app = express()
 require('express-async-errors')
 const cors = require('cors')
+// Routers
 const loginRouter = require('./controllers/login')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
+
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
@@ -28,8 +30,13 @@ app.use(middleware.requestLogger)
 
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
-//app.use(middleware.userExtractor)
 app.use('/api/blogs', blogsRouter)
+
+if (process.env.NODE_ENV === 'testruns') {  
+  console.log()
+  const testingRouter = require('./controllers/testing')  
+  app.use('/api/testing', testingRouter)
+}
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

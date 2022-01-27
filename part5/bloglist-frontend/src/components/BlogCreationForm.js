@@ -66,7 +66,7 @@ const BlogCreationForm =  React.forwardRef(({ createBlog }, ref) => {
             onChange={({ target }) => setBlogUrl(target.value)}
           />
         </div>
-        <button type="submit"> create </button>
+        <button id='submit' type="submit"> create </button>
       </form>
     </div>
   )

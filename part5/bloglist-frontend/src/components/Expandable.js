@@ -10,15 +10,18 @@ const Togglable = (props) => {
     setVisible(!visible)
   }
 
+  const viewId = props.title + 'View'
+  const hideId = props.title + 'Hide'
+
   return (
     <div>
-      <div style={hideWhenVisible}>
+      <div data-cy="blog" style={hideWhenVisible}>
         {props.title} by {props.author}
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button id={viewId} onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible} className='expandable'>
         {props.children}
-        <button onClick={toggleVisibility}>hide</button>
+        <button id={hideId} onClick={toggleVisibility}>hide</button>
       </div>
     </div>
   )

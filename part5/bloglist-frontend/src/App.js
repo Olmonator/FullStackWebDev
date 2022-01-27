@@ -51,6 +51,12 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       console.log('login sucessful')
+      setAlertMessage(
+        `${JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name} has been successfully logged in`
+      )
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 5000)
     } catch (exception) {
       console.log('login failed')
       setAlertMessage(
@@ -60,12 +66,6 @@ const App = () => {
         setAlertMessage(null)
       }, 5000)
     }
-    setAlertMessage(
-      `${JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name} has been successfully logged in`
-    )
-    setTimeout(() => {
-      setAlertMessage(null)
-    }, 5000)
   }
 
   const handleLogout = (event) => {
@@ -149,6 +149,8 @@ const App = () => {
       }, 5000)
     }
   }
+
+  // App rendering below
   if ( user === null) {
     return (
       <div>
@@ -159,6 +161,7 @@ const App = () => {
           <div>
               username
             <input
+              id="username"
               type="text"
               value={username}
               name="Username"
@@ -168,13 +171,14 @@ const App = () => {
           <div>
               password
             <input
+              id="password"
               type="text"
               value={password}
               name="Password"
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit">login</button>
+          <button id="login-button" type="submit">login</button>
         </form>
       </div>
     )
@@ -190,6 +194,7 @@ const App = () => {
 
         <Togglable
           buttonLabel='Create New Blog'
+          buttonId='viewForm'
           ref={blogFormRef}>
           <BlogCreationForm
             createBlog={createBlog}

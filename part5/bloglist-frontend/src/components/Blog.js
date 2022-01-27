@@ -25,12 +25,14 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
     }
   }
 
+  const likeId = blog.title + 'Like'
+
   return (
     <Expandable title={blog.title} author={blog.author} buttonLabel='view'>
       <div className='blog'>
         <p> {blog.title} by {blog.author} </p>
         <p> avaiable at {blog.url} </p>
-        <p> likes {blog.likes} <button onClick={handleLike}>like</button> </p>
+        <p> likes {blog.likes} <button id={likeId} onClick={handleLike}>like</button> </p>
         <p> posted by {blog.user.name} </p>
         {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
       </div>
