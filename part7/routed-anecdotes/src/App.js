@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams
+  Switch, Route, Link, useParams, useHistory
 } from "react-router-dom"
 
 const Menu = () => {
@@ -37,7 +37,7 @@ const Anecdote = ({ anecdotes }) => {
     <div>
       <h2>{anecdote.content}</h2>
       <p>has {anecdote.votes} votes</p>
-      <p>for more information see: {anecdote.url}</p>
+      <p>for more information see: {anecdote.info}</p>
     </div>
   )
 }
@@ -69,15 +69,18 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    console.log(`Creating new Anecdote: {content: ${content} author: ${author} info: ${info}`)
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+    history.push('/anecdotes')
   }
 
   return (
@@ -100,7 +103,24 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Notification = ({ notification }) => {
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+  
+  if (notification === '') {
+    return null
+  } else {
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+  }
 }
 
 const App = () => {
@@ -126,6 +146,11 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    console.log('New Anecdote Created')
+    setNotification(`New Anecdote ${anecdote.content} was created`)
+    setTimeout(() => {
+      setNotification('')
+    }, 10000)
   }
 
   const anecdoteById = (id) =>
@@ -145,6 +170,7 @@ const App = () => {
   return (
     <Router>
       <div>
+        <Notification notification={notification} />
         <h1>Software anecdotes</h1>
         <Menu />
         <Switch>
