@@ -91,21 +91,26 @@ const CreateNew = (props) => {
     info.reset()
   }
 
+  const extractProps = (fields) => {
+    const {reset, ...rest} = fields
+    return rest
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...extractProps(content)} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...extractProps(author)} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...extractProps(info)} />
         </div>
         <button>create</button>
       </form>
