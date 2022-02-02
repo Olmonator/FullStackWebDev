@@ -20,7 +20,7 @@ const create = async newBlog => {
   return response.data
 }
 
-const like = async blog => {
+const likeBlog = async blog => {
 
   const config = {
     headers: { Authorization: token }
@@ -40,4 +40,4 @@ const deleteBlog = async id => {
   return response.data
 }
 
-export default { getAll, create, setToken, like, deleteBlog }
+export default { getAll, create, setToken, likeBlog, deleteBlog }

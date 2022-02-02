@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -6,29 +6,24 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogCreationForm from './components/BlogCreationForm'
-import Togglable from './components/Togglable'
 
 import { setNotification } from './reducers/notificationReducer'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { initBlogs } from './reducers/blogReducer'
 
 const App = () => {
 
-  const dispatch = useDispatch()  
+  const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
 
-  const [blogs, setBlogs] = useState([])
+  useEffect(() => {
+    dispatch(initBlogs())      
+  }, [dispatch])
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const blogFormRef = useRef()
-  const blogFormInputRef = useRef()
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -82,53 +77,6 @@ const App = () => {
     ))
   }
 
-  const createBlog = async (blog) => {
-    try {
-      const savedBlog = await blogService.create(blog)
-
-      blogFormInputRef.current.resetInputs()
-      blogFormRef.current.toggleVisibility()
-      setBlogs(blogs.concat(savedBlog))
-      console.log('blog created', savedBlog)
-      dispatch(setNotification(
-        'Blog has been successfully created'
-      ))
-    } catch (exception) {
-      console.log('adding new blog unsuccessful')
-      dispatch(setNotification(
-        'Error: blog could not be created'
-      ))
-    }
-  }
-
-  const likeBlog = async (blog) => {
-    try {
-      const savedBlog = await blogService.like(blog)
-
-      setBlogs(blogs.filter(b => b.name === savedBlog.name))
-      console.log('blog liked', savedBlog)
-    } catch (exception) {
-      console.log('liking blog unsuccessful')
-      dispatch(setNotification(
-        'Error: blog could not be liked'
-      ))
-    }
-  }
-
-  const deleteBlog = async (id) => {
-    try {
-      await blogService.deleteBlog(id)
-
-      setBlogs(blogs.filter(b => b.id !== id))
-      console.log('blog deleted')
-    } catch (exception) {
-      console.log('deleting blog unsuccessful')
-      dispatch(setNotification(
-        'Error: blog could not be deleted'
-      ))
-    }
-  }
-
   // App rendering below
   if ( user === null) {
     return (
@@ -171,22 +119,12 @@ const App = () => {
           <button onClick={handleLogout}> logout </button>
         </p>
 
-        <Togglable
-          buttonLabel='Create New Blog'
-          buttonId='viewForm'
-          ref={blogFormRef}>
-          <BlogCreationForm
-            createBlog={createBlog}
-            ref={blogFormInputRef}
-          />
-        </Togglable>
+        <BlogCreationForm />
 
         {blogs.sort((blog1, blog2) => blog2.likes - blog1.likes).map(blog =>
           <Blog
             key={blog.id}
             blog={blog}
-            likeBlog={likeBlog}
-            deleteBlog={deleteBlog}
             user={user}
           />
         )}
