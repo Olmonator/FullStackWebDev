@@ -5,7 +5,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { Provider } from 'react-redux'
-
+import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 
 import notificationReducer from './reducers/notificationReducer'
@@ -28,6 +28,8 @@ const reducer = combineReducers({
 
 ReactDOM.render(
   <Provider store={store}>    
-    <App />
+    <Router>    
+      <App />
+    </Router>
   </Provider>,  document.getElementById('root')
 )

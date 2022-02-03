@@ -1,9 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import User from './User'
 
-const UserList = () => {
-  const users = useSelector(state => state.users)
+const UserList = ({ users }) => {
 
   return (
     <div>
