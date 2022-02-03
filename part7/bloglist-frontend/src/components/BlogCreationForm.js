@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import Togglable from './Togglable'
+import { addBlog } from '../reducers/userReducer'
 
 
 const BlogCreationForm =  React.forwardRef((props, ref) => {
@@ -38,8 +39,11 @@ const BlogCreationForm =  React.forwardRef((props, ref) => {
       dispatch(setNotification(
         'Blog has been successfully created'
       ))
+      // after creation functions
       resetInputs()
       blogFormRef.current.toggleVisibility()
+      dispatch(addBlog(newBlogObject, JSON.parse(window.localStorage.getItem('loggedBlogappUser'))))
+      
     } catch (exception) {
       console.log('adding new blog unsuccessful')
       dispatch(setNotification(

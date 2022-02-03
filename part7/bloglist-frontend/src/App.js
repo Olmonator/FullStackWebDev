@@ -10,6 +10,8 @@ import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { checkUser, logout } from './reducers/loginReducer'
+import { getUsers } from './reducers/userReducer'
+import UserList from './components/UserList'
 
 const App = () => {
 
@@ -23,6 +25,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(checkUser())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getUsers())
   }, [dispatch])
 
   const handleLogout = (event) => {
@@ -68,6 +74,8 @@ const App = () => {
             user={user}
           />
         )}
+
+        <UserList />
       </div>
     )
   }

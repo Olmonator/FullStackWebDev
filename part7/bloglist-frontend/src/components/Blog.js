@@ -4,6 +4,8 @@ import Expandable from './Expandable'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { removeBlog } from '../reducers/userReducer'
+
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch()
@@ -41,8 +43,8 @@ const Blog = ({ blog, user }) => {
     if (window.confirm('Do you really want to delete this Blog?')) {
       try {
         dispatch(deleteBlog(blog.id ))
-  
-        console.log('blog deleted')
+        console.log('blog deleted', blog)
+        dispatch(removeBlog(blog, blog.user))
       } catch (exception) {
         console.log('deleting blog unsuccessful')
         dispatch(setNotification(
