@@ -67,7 +67,7 @@ const BlogView = ({ blogs, user }) => {
         const likeId = blog.title + 'Like'
         return (
             <div>
-              <h2>{blog.name}</h2>
+              <h2>{blog.title}</h2>
               <p> avaiable at {blog.url} </p>
               <p> likes {blog.likes} <button id={likeId} onClick={handleLike}>like</button> </p>
               <p> posted by {blog.user.name} </p>

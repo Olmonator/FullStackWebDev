@@ -30,7 +30,7 @@ const Blog = ({ blog, user }) => {
   return (
     <div className='blog'>
       <p> 
-        <Link to={`blogs/${blog.id}`}>{blog.title}</Link> by {blog.author} 
+        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by {blog.author} 
         {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
       </p>
     </div>

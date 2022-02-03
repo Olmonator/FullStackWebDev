@@ -6,7 +6,7 @@ const User = ({ user }) => {
   return (
     <tr>
       <th>
-        <Link to={`users/${user.id}`}>{user.name}</Link>
+        <Link to={`/users/${user.id}`}>{user.name}</Link>
       </th>
       <th>
         {user.blogs.length}
