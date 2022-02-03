@@ -6,23 +6,18 @@ const userReducer = (state = [], action) => {
       return action.data
     case 'ADD_BLOG':
         const user = state.find(user => user.username === action.user.username)
-
         const newBlog = action.blog
         const newBlogs = user.blogs.concat(newBlog)
         const updatedUser = {...user, blogs: newBlogs}
-        console.log('OldUser: ', user)
-        console.log('newuser: ', updatedUser)
+
         return state.map(u =>
           u.id !== user.id ? u : updatedUser
         )
     case 'REMOVE_BLOG':
-        console.log('deleteblog(): ', action.user)
         const userToUpdate = state.find(user => user.username === action.user.username)
-
         const nBlogs = userToUpdate.blogs.filter(blog => blog.id !== action.blog.id)
         const uUser = {...userToUpdate, blogs: nBlogs}
-        console.log('OldUser: ', userToUpdate)
-        console.log('newuser: ', uUser)
+
         return state.map(u =>
           u.id !== userToUpdate.id ? u : uUser
         )
