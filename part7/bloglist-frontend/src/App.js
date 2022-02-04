@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { checkUser, logout } from './reducers/loginReducer'
 import { getUsers } from './reducers/userReducer'
+import { initComments } from './reducers/commentsReducers'
 
 
 const App = () => {
@@ -35,6 +36,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getUsers())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(initComments())
   }, [dispatch])
 
   const handleLogout = (event) => {
