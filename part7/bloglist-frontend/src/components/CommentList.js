@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux"
+import { Table } from "react-bootstrap"
 
 const CommentList = ({ blog_id }) => {
     const comments = useSelector(state => state.comments)
@@ -14,11 +15,13 @@ const CommentList = ({ blog_id }) => {
         console.log('COMMENT_LIST: comments for this blog: ', blogComments.contents)
         return (
             <div>
-                <ul>
-                    {blogComments.contents.map(comment =>
-                        <li key={comment.id}>{comment.text}</li>
-                    )}
-                </ul>
+                <Table striped hover>
+                    <tbody>
+                        {blogComments.contents.map(comment =>
+                            <tr key={comment.id}><td>{comment.text}</td></tr>
+                        )}
+                    </tbody>
+                </Table>
             </div>
         )
     }

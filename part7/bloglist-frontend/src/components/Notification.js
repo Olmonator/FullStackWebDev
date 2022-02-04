@@ -10,13 +10,17 @@ const Notification = () => {
     return null
   } else {
     if (message.content.substring(0,5) === 'Error') {
-      return <div className='error'>
-        {message.content}
-      </div>
+      return (
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {message.content}
+        </div>
+      )
     } else {
-      return <div className='alert'>
-        {message.content}
-      </div>
+      return (
+        <div class="alert alert-success" role="alert">
+          {message.content}
+        </div>
+      )
     }
   }
 }

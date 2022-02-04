@@ -5,6 +5,8 @@ import { setNotification } from '../reducers/notificationReducer'
 import Togglable from './Togglable'
 import { addBlog } from '../reducers/userReducer'
 
+import { Form, Button } from 'react-bootstrap'
+
 
 const BlogCreationForm =  React.forwardRef((props, ref) => {
   const dispatch = useDispatch()
@@ -61,37 +63,40 @@ const BlogCreationForm =  React.forwardRef((props, ref) => {
       <div className='blogCreationDiv'>
         <h2>Create a new Blog</h2>
         <form onSubmit={handleCreate}>
-          <div>
-            title:
+          <div class='form-group'>
+            <label for='blogTitle'>Title</label>
             <input
               id='blogTitle'
               type="text"
               value={blogTitle}
               name="Blogtitle"
               onChange={({ target }) => setBlogTitle(target.value)}
+              class="form-control"
             />
           </div>
-          <div>
-            author:
+          <div class='form-group'>
+            <label for='blogAuthor'>Author</label>
             <input
               id='blogAuthor'
               type="text"
               value={blogAuthor}
               name="Blogauthor"
               onChange={({ target }) => setBlogAuthor(target.value)}
+              class="form-control"
             />
           </div>
-          <div>
-            url:
+          <div class='form-group'>
+            <label for='blogUrl'>Url</label>
             <input
               id='blogUrl'
               type="text"
               value={blogUrl}
               name="BlogURL"
               onChange={({ target }) => setBlogUrl(target.value)}
+              class="form-control"
             />
           </div>
-          <button id='submit' type="submit"> create </button>
+          <Button id='submit' type="submit"> create </Button>
         </form>
       </div>
     </Togglable>

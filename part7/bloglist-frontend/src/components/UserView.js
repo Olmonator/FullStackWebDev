@@ -1,4 +1,6 @@
 import { useParams } from "react-router-dom"
+import Menu from './Menu'
+import { Table } from 'react-bootstrap'
 
 const UserView = ({ users }) => {
     console.log(users)
@@ -10,13 +12,18 @@ const UserView = ({ users }) => {
     }
     return (
       <div>
+        <Menu user={user}/>
         <h2>{user.name}</h2>
         <h4>added blogs</h4>
-        <ul>
-            {user.blogs.map(blog => 
-                <li key={blog.id}>{blog.title}</li>
-            )}
-        </ul>
+        <Table striped hover>
+            <tbody>
+              {user.blogs.map(blog => 
+                  <tr key={blog.id}>
+                    <td>{blog.title}</td>
+                  </tr>
+              )}
+            </tbody>
+        </Table>
       </div>
     )
 }

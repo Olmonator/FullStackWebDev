@@ -9,14 +9,14 @@ import UserView from './components/UserView'
 import UserList from './components/UserList'
 import BlogView from './components/BlogView'
 import BlogList from './components/BlogList'
-
-import { setNotification } from './reducers/notificationReducer'
+import Menu from './components/Menu'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { checkUser, logout } from './reducers/loginReducer'
 import { getUsers } from './reducers/userReducer'
 import { initComments } from './reducers/commentsReducers'
+
 
 
 const App = () => {
@@ -42,54 +42,24 @@ const App = () => {
     dispatch(initComments())
   }, [dispatch])
 
-  const handleLogout = (event) => {
-    event.preventDefault()
-
-    console.log('Logging out user', user.name )
-    try {
-      dispatch(logout)
-    } catch (exception) {
-      dispatch(setNotification(
-        `Error: ${user.name} could not be logged out`
-      ))
-    }
-    dispatch(setNotification(
-      `${user.name} has been successfully logged out`
-    ))
-  }
-
-  const Menu = ({ user }) => {
-    return (
-      <div>
-        <Link to={`blogs/`}>blogs</Link>
-        <Link to={`users/`}>users</Link>
-
-        {user.name} logged in
-        <button onClick={handleLogout}> logout </button>
-
-        <h2>blog app</h2>
-      </div>
-    )
-  }
-
   // App rendering below
   if ( user === null) {
     return (
-      <div>
+      <div className="container">
         <Notification />
         <Login />
       </div>
     )
   } else {
     return (
-      <div>
+      <div className="container">
         <Notification />
         <Switch>
           <Route path="/users/:id">
-            <UserView users={users} />
+            <UserView users={users} user={user}/>
           </Route>
           <Route path='/users'>
-            <UserList users={users}/>
+            <UserList users={users} user={user}/>
           </Route>
           <Route path='/blogs/:id'>
             <BlogView blogs={blogs} user={user} />
@@ -98,7 +68,11 @@ const App = () => {
             <BlogList blogs={blogs} user={user} />
           </Route>
           <Route path="/">
-            <Menu user={user}/>
+            <div>
+              <Menu user={user}/>
+              <h2>Blog App</h2>
+              {!user ? <Login user={user}/> : null}
+            </div>
           </Route>
         </Switch>
       </div>

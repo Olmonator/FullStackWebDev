@@ -1,6 +1,8 @@
 import blogService from '../services/blogs'
 import loginService from '../services/login'
 
+import { setNotification } from './notificationReducer'
+
 const loginReducer = (state = null, action) => {
     switch (action.type) {
         case 'LOGIN':
@@ -16,17 +18,24 @@ const loginReducer = (state = null, action) => {
 
 export const login = (username, password) => {
     return async dispatch => {
-        const user = await loginService.login({
+        try {
+            const user = await loginService.login({
             username, password
           })
-        blogService.setToken(user.token)
-        window.localStorage.setItem(
-            'loggedBlogappUser', JSON.stringify(user)
-        )
-        dispatch({
-            type: 'LOGIN',
-            data: user
-        })
+          blogService.setToken(user.token)
+          window.localStorage.setItem(
+              'loggedBlogappUser', JSON.stringify(user)
+          )
+          dispatch({
+              type: 'LOGIN',
+              data: user
+          })
+        } catch (exception) {
+            console.log('login failed')
+            dispatch(setNotification(
+              `Error: ${username} could not be logged in`
+            ))
+        }
     }
 }
 
@@ -46,6 +55,7 @@ export const checkUser = () => {
 
 export const logout = () => {
     return dispatch => {
+        console.log('flag')
         window.localStorage.removeItem('loggedBlogappUser')
         dispatch({
             type: 'LOGOUT'

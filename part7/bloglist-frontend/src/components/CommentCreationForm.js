@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { addComment } from '../reducers/commentsReducers'
 
+import { Button } from 'react-bootstrap'
+
 const CommentCreationForm = ({ blog_id }) => {
     const [comment, setComment] = useState('')
     const dispatch = useDispatch()
@@ -31,17 +33,18 @@ const CommentCreationForm = ({ blog_id }) => {
         <div>
             <h3> Add a Comment </h3>
             <form onSubmit={handleCreate}>
-                <div>
-                    comment:
+                <div class='form-group'>
+                    <label for='comment'>comment</label>
                     <input
                     id='comment'
                     type="text"
                     value={comment}
                     name="comment"
                     onChange={({ target }) => setComment(target.value)}
+                    class="form-control"
                     />
                 </div>
-                <button id='submit' type="submit"> add comment </button>
+                <Button id='submit' type="submit"> add comment </Button>
             </form>
         </div>
     )

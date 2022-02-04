@@ -4,9 +4,11 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { removeBlog } from '../reducers/userReducer'
 import { useHistory } from "react-router-dom"
+import { Button } from "react-bootstrap"
 
 import CommentList from './CommentList'
 import CommentCreationForm from './CommentCreationForm'
+import Menu from './Menu'
  
 const BlogView = ({ blogs, user }) => {
     const id = useParams().id  
@@ -65,16 +67,17 @@ const BlogView = ({ blogs, user }) => {
     if (!blog || !user) {
         console.log('Loading :', blog, user)
 
-        return null  
+        return <Menu user={user}/>
     } else {
         const likeId = blog.title + 'Like'
         return (
             <div>
+              <Menu user={user}/>
               <h2>{blog.title}</h2>
               <p> avaiable at {blog.url} </p>
-              <p> likes {blog.likes} <button id={likeId} onClick={handleLike}>like</button> </p>
+              <p> likes {blog.likes} <Button id={likeId} onClick={handleLike}>like</Button> </p>
               <p> posted by {blog.user.name} </p>
-              {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
+              {blog.user.username === user.username && <Button onClick={handleDelete}>delete</Button>}
               <h3>Comments</h3>
               <CommentList blog_id={blog.id}/>
               <CommentCreationForm blog_id={blog.id}/>

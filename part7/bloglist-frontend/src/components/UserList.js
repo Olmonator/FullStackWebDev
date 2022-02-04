@@ -1,16 +1,18 @@
 import React from 'react'
 import User from './User'
-
-const UserList = ({ users }) => {
+import Menu from './Menu'
+import { Table } from 'react-bootstrap'
+const UserList = ({ users, user }) => {
 
   return (
     <div>
+        <Menu user={user}/>
         <h2> Users </h2>
-        <table>
+        <Table striped hover>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Blogs Created</th>
+                    <td>Name</td>
+                    <td>Blogs Created</td>
                 </tr>
             </thead>
             <tbody>
@@ -18,7 +20,7 @@ const UserList = ({ users }) => {
                     <User key={user.id} user={user} />
                 )}
             </tbody>
-        </table>
+        </Table>
     </div>
   )
 }

@@ -6,6 +6,8 @@ import { setNotification } from '../reducers/notificationReducer'
 import { deleteBlog } from '../reducers/blogReducer'
 import { removeBlog } from '../reducers/userReducer'
 
+import { Button } from 'react-bootstrap'
+
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch()
@@ -28,12 +30,14 @@ const Blog = ({ blog, user }) => {
   }
 
   return (
-    <div className='blog'>
-      <p> 
+    <tr>
+      <td>
         <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by {blog.author} 
-        {blog.user.username === user.username && <button onClick={handleDelete}>delete</button>}
-      </p>
-    </div>
+      </td>
+      <td>
+        {blog.user.username === user.username && <Button onClick={handleDelete}>delete</Button>}
+      </td>
+    </tr>
   )
 }
 
