@@ -1,0 +1,24 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "description": "Graph QL Exercises",
+  "main": "library-backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olmonator/FullStackWebDev.git"
+  },
+  "author": "Olmo Lecht",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Olmonator/FullStackWebDev/issues"
+  },
+  "homepage": "https://github.com/Olmonator/FullStackWebDev#readme",
+  "dependencies": {
+    "apollo-server": "^3.6.3",
+    "apollo-server-core": "^3.6.3",
+    "graphql": "^16.3.0"
+  }
+}
