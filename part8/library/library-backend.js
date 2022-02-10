@@ -1,4 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { NoUnusedVariablesRule } = require('graphql')
+const { v1: uuid } = require('uuid')
 
 let authors = [
   {
@@ -92,11 +94,24 @@ const typeDefs = gql`
       genres: [String!]!
   }
 
-
-
   type Author {
       name: String!
+      born: Int
       bookCount: Int!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book
+
+    addAuthor(
+        name: String!
+        born: Int
+    ): Author
   }
 
   type Query {
@@ -138,6 +153,22 @@ const resolvers = {
     bookCount: (root) => {
         const byName = (book) => book.author === root.name
         return books.filter(byName).length
+    }
+  },
+  Mutation: {
+    addAuthor: (root, args) => {
+        const author = { ... args, id: uuid() }
+        authors = authors.concat(author)
+        return author
+    },
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      if (!authors.map(author => author.name).includes(args.author)) {
+        const author = { name: args.author, id: uuid() }
+        authors = authors.concat(author)
+      }
+      return book
     }
   }
 }
