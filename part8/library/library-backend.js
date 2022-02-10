@@ -112,6 +112,11 @@ const typeDefs = gql`
         name: String!
         born: Int
     ): Author
+
+    editAuthor(
+        name: String!
+        setBornTo: Int!
+    ): Author
   }
 
   type Query {
@@ -169,6 +174,15 @@ const resolvers = {
         authors = authors.concat(author)
       }
       return book
+    },
+    editAuthor: (root, args) => {
+        const author = authors.find(author => author.name === args.name)
+        if (!author) {
+            return null
+        }
+        const updatedAuthor = {... author, born: args.setBornTo}
+        authors = authors.map(author => author.name !== args.name ? author : updatedAuthor)
+        return updatedAuthor
     }
   }
 }
