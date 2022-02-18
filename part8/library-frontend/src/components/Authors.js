@@ -26,6 +26,7 @@ const Authors = (props) => {
   if (result.loading) {
     return <div>loading...</div>
   }
+  console.log("result: ", result)
   const authors = result.data.allAuthors
   console.log('queryResult: ', authors)
   return (
