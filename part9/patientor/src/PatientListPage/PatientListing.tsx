@@ -3,12 +3,13 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
-import { setDiagnosisList, setPatient, useStateValue } from "../state";
-import { Diagnosis, Patient } from "../types";
+import { setPatient, useStateValue } from "../state";
+import { Patient } from "../types";
+import EntryDetails from "../components/EntryDetails";
 
 const PatientListing = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
-  const [{ diagnoses, patient }, dispatch] = useStateValue();
+  const [{ patient }, dispatch] = useStateValue();
 
   if (!patient || patient.id !== id) {
     console.log('fetching patient data');
@@ -25,29 +26,13 @@ const PatientListing = (): JSX.Element => {
       };
       void fetchPatient();
     }, [dispatch]); 
-    if (diagnoses.length === 0) {
-      React.useEffect(() => {
-        const fetchDiagnosisCodes = async () => {
-          try {
-            const { data: diagnosesFromApi } = await axios.get<Diagnosis[]>(
-              `${apiBaseUrl}/diagnoses`
-            );
-    
-            dispatch(setDiagnosisList(diagnosesFromApi));
-          } catch (e) {
-            console.error(e);
-          }
-        };
-        void fetchDiagnosisCodes();
-      }, [dispatch]);
-    }
     return (
       <div>
         <Icon loading name='spinner' size='big' />
       </div>
     );
   }
-  
+   
   return (
     <div>
       <h2>
@@ -64,19 +49,15 @@ const PatientListing = (): JSX.Element => {
       <p>
         occupation: {patient.occupation}
       </p>
-      <h4>entries</h4>
-      {patient.entries.map(entry => 
-        <div key={entry.id}>
-          {entry.date}: {entry.description}
-          {!diagnoses ?  <Icon loading name='spinner' size='big' /> :
-            <ul>
-              {entry.diagnosisCodes?.map(code => 
-                <li key={code}>{code} {diagnoses.find(d => d.code === code)?.name}</li>
-              )}
-            </ul>
-          }
-        </div>
-      )}
+      {patient.entries.length > 0
+        ? <>
+            <h4>entries</h4>
+            {patient.entries.map(entry =>
+              <EntryDetails key={entry.id} entry={entry} />
+            )}
+          </>
+        : null
+      }
     </div>
   );
 };
