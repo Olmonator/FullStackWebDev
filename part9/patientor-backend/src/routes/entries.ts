@@ -11,7 +11,7 @@ router.post('/api/patients/:id/entries', (req, res) => {
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';
     if (error instanceof Error) {
-      errorMessage += ' Error: ' + error.message;
+      errorMessage += ' ' + error.message;
     }
     res.status(400).send(errorMessage);
   }

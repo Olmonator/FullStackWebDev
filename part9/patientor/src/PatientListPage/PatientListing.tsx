@@ -1,31 +1,58 @@
 import axios from "axios";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Icon } from "semantic-ui-react";
+import { Button, Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
-import { setPatient, useStateValue } from "../state";
-import { Patient } from "../types";
+import {  useStateValue, setPatient, createEntry } from "../state";
+import {  Entry, Patient } from "../types";
 import EntryDetails from "../components/EntryDetails";
+import AddEntryModal from "../AddEntryModal";
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
 
 const PatientListing = (): JSX.Element => {
-  const { id } = useParams<{ id: string }>();
   const [{ patient }, dispatch] = useStateValue();
+  const { id } = useParams<{ id: string }>(); 
 
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+          values
+      );
+      dispatch(createEntry(newEntry));
+      closeModal();
+    } catch (e) {
+      console.error(e.response?.data || 'Unknown Error');
+      setError(e.response?.data || 'Unknown error');
+    }
+  };
+
+  
+  console.log('fetching patient data');
+  React.useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const { data: patientFromApi } = await axios.get<Patient>(
+          `${apiBaseUrl}/patients/${id}`
+        );
+        dispatch(setPatient(patientFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    void fetchPatient();
+  }, [dispatch]); 
   if (!patient || patient.id !== id) {
-    console.log('fetching patient data');
-    React.useEffect(() => {
-      const fetchPatient = async () => {
-        try {
-          const { data: patientFromApi } = await axios.get<Patient>(
-            `${apiBaseUrl}/patients/${id}`
-          );
-          dispatch(setPatient(patientFromApi));
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      void fetchPatient();
-    }, [dispatch]); 
     return (
       <div>
         <Icon loading name='spinner' size='big' />
@@ -58,6 +85,13 @@ const PatientListing = (): JSX.Element => {
           </>
         : null
       }
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button onClick={() => openModal()}>Add New Patient</Button>
     </div>
   );
 };

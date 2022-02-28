@@ -3,7 +3,7 @@ import React from "react";
 import { Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
 import { setDiagnosisList, useStateValue } from "../state";
-import { Diagnosis, Entry } from "../types";
+import { Diagnosis, Entry, EntryType } from "../types";
 
 import { EntryBase } from "./Entries";
 
@@ -45,7 +45,7 @@ const EntryDetails = ({ entry } : { entry: Entry }): JSX.Element => {
   const [{ diagnoses }, dispatch] = useStateValue();
   
   if (diagnoses.length === 0) {
-    console.log('fetching diagnoses');
+    console.log('fetching diagnoses ENTRY: ', entry.type);
     React.useEffect(() => {
       const fetchDiagnosisCodes = async () => {
         try {
@@ -62,20 +62,20 @@ const EntryDetails = ({ entry } : { entry: Entry }): JSX.Element => {
     }, [dispatch]);
   }
   switch(entry.type){
-    case 'Hospital':
+    case EntryType.Hospital:
       return (
         <div style={divStyle}>
           <EntryBase entry={entry} diagnoses={diagnoses} />
         </div>
       );
-    case 'HealthCheck':
+    case EntryType.HealthCheck:
       return (
         <div style={divStyle}>
           <EntryBase entry={entry} diagnoses={diagnoses}/>
           {heart(entry.healthCheckRating)}
         </div>
       );
-    case 'OccupationalHealthcare':
+    case EntryType.OccupationalHealthcare:
       return (
         <div style={divStyle}>
           <EntryBase entry={entry} diagnoses={diagnoses} />

@@ -4,7 +4,6 @@ import { Diagnosis } from "../types";
 
 const DiagnosisList = ({ diagnoses, codes }: {diagnoses: Diagnosis[], codes: string[]} ): JSX.Element => {
   const entryDiagnoses = codes.map(code => diagnoses.find(diagnosis => diagnosis.code === code));
-  console.log('');
   return (
     <div>
       {entryDiagnoses.map(diagnosis =>

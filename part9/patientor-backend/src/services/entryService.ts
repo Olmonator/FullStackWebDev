@@ -1,10 +1,10 @@
 import patients from "../../data/patients";
-import { Entry } from "../types";
+import { Entry, EntryType, EntryWithoutId } from "../types";
 import { isString, isDate, isDischarge } from "../utils";
+import {v1 as uuid} from 'uuid';
 
 const checkEntry = (entry: Entry): boolean => { 
-  if (!entry 
-    || !entry.id || !isString(entry.id) 
+  if (!entry   
     || !entry.description || !isString(entry.description)
     || !entry.date || !isDate(entry.date)
     || !entry.specialist || !isString(entry.specialist)
@@ -13,13 +13,15 @@ const checkEntry = (entry: Entry): boolean => {
   }
 
   switch (entry.type) {
-    case 'HealthCheck':
-      if (entry.healthCheckRating >= 0 && entry.healthCheckRating <= 3) return true; else false;
+    case EntryType.HealthCheck:
+      if (entry.healthCheckRating >= 0 && entry.healthCheckRating <= 3) {
+        return true
+      } else false;
       break;
-    case 'Hospital':
+    case EntryType.Hospital:
       if (entry.discharge && isDischarge(entry.discharge)) return true; else false;
       break;
-    case 'OccupationalHealthcare':
+    case EntryType.OccupationalHealthcare:
       if (entry.employerName && isString(entry.employerName)) return true; else false;
       break;
     default:
@@ -28,14 +30,15 @@ const checkEntry = (entry: Entry): boolean => {
   return false;
 };
 
-const addEntry = ( entry: Entry, id: string  ): Entry => {
-  const patient = patients.find(p => p.id === id);
-  console.log(`Adding entry: ${entry} to patient: ${patient} ...`);
-  if (checkEntry(entry)) {
-    patient?.entries.push(entry);
-    return entry;
+const addEntry = ( entry: EntryWithoutId, patientId: string  ): Entry => {
+  const patient = patients.find(p => p.id === patientId);
+  const newEntry = { id: uuid(), ...entry }
+  console.log(`Adding entry: ${entry.description} to patient: ${patient?.name}`);
+  if (checkEntry(newEntry)) {
+    patient?.entries.push(newEntry);
+    return newEntry;
   } else {
-    throw new Error('Entry missing or malformatted');
+    throw new Error('Entry missing or malformatted'); 
   }
 };
 

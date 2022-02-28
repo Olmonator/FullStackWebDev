@@ -1,19 +1,19 @@
 import React from "react";
 import { Icon } from "semantic-ui-react";
 import DiagnosisList from "../PatientListPage/DiagnosesList";
-import { Diagnosis, Entry } from "../types";
+import { Diagnosis, Entry, EntryType } from "../types";
 
 const switchIcon = (type: string) => {
   switch (type) {
-    case 'Hospital':
+    case EntryType.Hospital:
       return (
         <Icon name='medkit'/>
       );
-    case 'HealthCheck':
+    case EntryType.HealthCheck:
       return (
         <Icon name='doctor'/>
       );
-    case 'OccupationalHealthcare':
+    case EntryType.OccupationalHealthcare:
       return (
         <Icon name='stethoscope' />
       );
@@ -33,7 +33,7 @@ export const EntryBase = ({ entry, diagnoses}: {entry: Entry, diagnoses: Diagnos
       <h2> 
         {entry.date} 
         {switchIcon(entry.type)} 
-        {entry.type === 'OccupationalHealthcare'
+        {entry.type === EntryType.OccupationalHealthcare
           ? entry.employerName
           : null
         }

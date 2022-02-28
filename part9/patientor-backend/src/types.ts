@@ -24,6 +24,12 @@ export enum Gender {
   Other = 'other'
 }
 
+export enum EntryType {
+  Hospital = "Hospital",
+  HealthCheck = "HealthCheck",
+  OccupationalHealthcare = "OccupationalHealthCare"
+}
+
 interface BaseEntry {
   id: string;
   description: string;
@@ -40,17 +46,17 @@ export enum HealthCheckRating {
 }
 
 interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+  type: EntryType.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
 
-export interface Discharge {
+interface Discharge {
   date: string;
   criteria: string;
 }
 
 interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: EntryType.Hospital;
   discharge: Discharge;
 }
 
@@ -60,12 +66,17 @@ interface SickLeave {
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare';
+  type: EntryType.OccupationalHealthcare;
   employerName: string;
   sickLeave?: SickLeave;
 }
 
 export type Entry =
-  | HospitalEntry
+  HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+// Define Entry without the 'id' property
+export type EntryWithoutId = UnionOmit<Entry, 'id'>;
