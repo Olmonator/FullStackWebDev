@@ -1,6 +1,7 @@
 import express from 'express';
 import patientRouter from './routes/patients';
 import diagnosisRouter from './routes/diagnoses';
+import entryRouter from './routes/entries';
 import cors from 'cors';
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(cors());
 
 app.use(patientRouter);
 app.use(diagnosisRouter);
+app.use(entryRouter);
 
 const PORT = 3001;
 

@@ -1,10 +1,10 @@
-import { NewPatient, Gender } from './types';
+import { NewPatient, Gender, Discharge } from './types';
 
-const isString = (text: unknown): text is string => {
+export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
-const isDate = (date: string): boolean => {
+export const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
@@ -13,6 +13,13 @@ const isGender = (param: any): param is Gender => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.values(Gender).includes(param);
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isDischarge = (param: any): param is Discharge => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(isDischarge).includes(param);
+};
+
 
 const parseDateOfBirth = (dateOfBirth: unknown): string => {
   if (!dateOfBirth || !isString(dateOfBirth) || !isDate(dateOfBirth)) {
